@@ -1,0 +1,35 @@
+﻿@page "/counter"
+@using Wanderer.Editor
+
+<h1>Dialogue Builder</h1>
+
+<textarea @bind="@Title" style="width:100%"></textarea>
+
+<textarea @bind="@Output" style="width:100%"></textarea>
+
+
+@code {
+
+    private string _title = "Hello, World!";
+    private string Title
+    {
+        get { return _title; }
+        set
+        {
+            _title = value;
+
+            try
+            {
+                
+                var db = new DialogueBuilder();
+                Output = db.BuildAndSerialize(value);
+            }
+            catch (Exception)
+            {
+                Output = "Error";
+            }
+        }
+    }
+
+    private string Output { get; set; }
+}
