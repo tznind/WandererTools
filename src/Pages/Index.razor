@@ -1,8 +1,49 @@
 ﻿@page "/"
 @page "/hello"
 
-<h1>Hello, world!</h1>
+@using Wanderer.Editor
 
-Welcome to your new app.
+<h1>Dialogue Builder</h1>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+Enter your dialogue tree here using space key for indentation.  Alternate dialogue text with responses for example:
+
+<textarea @bind="@Input" style="width: 100%; height:300px; font-family:monospace"></textarea>
+
+<button class="btn btn-primary" @onclick="BuildDialogue">Build</button>
+
+<textarea @bind="@Output" style="width:100%; height:300px; font-family:monospace"></textarea>
+
+
+@code {
+
+    private const string Example =
+        @"
+Morning player, how are you this fine morning?
+  Good
+    What about you Npc, how are you?
+      I'm feeling homicidal... just looking for some monsters to fight really
+        I know where some monsters are
+        Have you thought about therapy?
+  Bad
+    Sorry to hear that
+  Indifferent
+    Yeah me too, no energy to do anything on days like this";
+
+    private string Input { get; set; } = Example.Trim();
+
+    private string Output { get; set; }
+
+    public void BuildDialogue()
+    {
+        try
+        {
+
+            var db = new DialogueBuilder();
+            Output = db.BuildAndSerialize(Input);
+        }
+        catch (Exception)
+        {
+            Output = "Error";
+        }
+    }
+}
