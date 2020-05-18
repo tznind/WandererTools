@@ -2,6 +2,7 @@
 @page "/hello"
 @inject HttpClient Http
 
+@using Wanderer.Systems.Validation
 @using System.IO.Compression
 @using Wanderer.Editor
 
@@ -67,16 +68,37 @@ Morning player, how are you this fine morning?
     }
     public void Enter()
     {
-      if(string.Equals(ConsoleInput,"start",StringComparison.CurrentCultureIgnoreCase))
+
+      try
       {
-          Console += "Loading " + zip.Length + " bytes" + Environment.NewLine;
-          
-          using (ZipArchive archive = new ZipArchive(new System.IO.MemoryStream(zip), ZipArchiveMode.Read))
-          {
-            Console += "Found " + archive.Entries.Count + " files" + Environment.NewLine;
-          }
+        if(string.Equals(ConsoleInput,"start",StringComparison.CurrentCultureIgnoreCase))
+        {
+            Console += "Loading " + zip.Length + " bytes" + Environment.NewLine;
+            
+            using (ZipArchive archive = new ZipArchive(new System.IO.MemoryStream(zip), ZipArchiveMode.Read))
+            {
+              Console += "Found " + archive.Entries.Count + " files" + Environment.NewLine;
 
+              var factory = new ZipWorldFactory(archive);
+
+              var validator = new WorldValidator();
+
+
+              Console += "Validating World" + Environment.NewLine;
+
+              validator.Validate(factory);
+
+              Console += validator.Warnings + Environment.NewLine;
+              Console += validator.Errors + Environment.NewLine;
+
+              Console += validator.WarningCount + " Warnings" + Environment.NewLine;           
+              Console += validator.ErrorCount + " Errors" + Environment.NewLine;
+            }
+        }
       }
-
+      catch(Exception ex)
+      {
+        Console += ex + Environment.NewLine;
+      }
     }
 }
