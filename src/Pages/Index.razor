@@ -7,11 +7,19 @@
 
 Enter your dialogue tree here using space key for indentation.  Alternate dialogue text with responses for example:
 
-<textarea @bind="@Input" style="width: 100%; height:300px; font-family:monospace"></textarea>
+<textarea @bind="@Input" style="width: 100%; height:300px; font-family:monospace; font-size:small"></textarea>
 
 <button class="btn btn-primary" @onclick="BuildDialogue">Build</button>
 
-<textarea @bind="@Output" style="width:100%; height:300px; font-family:monospace"></textarea>
+<textarea @bind="@Output" style="width:100%; height:300px; font-family:monospace; font-size:small"></textarea>
+
+
+<h2>Example Game</h2>
+
+<textarea @bind="@Console" style="width: 100%; height:300px; font-family:monospace; font-size:small; background-color: black; color: white" readonly></textarea>
+
+<input @bind="@ConsoleInput"/> 
+<button class="btn btn-primary" @onclick="Enter">Enter</button>
 
 
 @code {
@@ -31,7 +39,7 @@ Morning player, how are you this fine morning?
     private string Input { get; set; } = Example.Trim();
 
     private string Output { get; set; }
-
+    
     public void BuildDialogue()
     {
         try
@@ -44,5 +52,19 @@ Morning player, how are you this fine morning?
         {
             Output = "Error";
         }
+    }
+
+    private string Console {get;set;} = "Type 'Start' to start\n";
+
+    private string ConsoleInput {get;set;}
+
+    public void Enter()
+    {
+      if(string.Equals(ConsoleInput,"start",StringComparison.CurrentCultureIgnoreCase))
+      {
+          Console += "Loading..." + Environment.NewLine;
+          
+      }
+
     }
 }
