@@ -1,6 +1,8 @@
 ﻿@page "/"
 @page "/hello"
+@inject HttpClient Http
 
+@using System.IO.Compression
 @using Wanderer.Editor
 
 <h1>Dialogue Builder</h1>
@@ -58,12 +60,22 @@ Morning player, how are you this fine morning?
 
     private string ConsoleInput {get;set;}
 
+    private byte[] zip;
+    protected override async Task OnInitializedAsync()
+    {
+        zip = await Http.GetByteArrayAsync("StarshipWanderer.zip");
+    }
     public void Enter()
     {
       if(string.Equals(ConsoleInput,"start",StringComparison.CurrentCultureIgnoreCase))
       {
-          Console += "Loading..." + Environment.NewLine;
+          Console += "Loading " + zip.Length + " bytes" + Environment.NewLine;
           
+          using (ZipArchive archive = new ZipArchive(new System.IO.MemoryStream(zip), ZipArchiveMode.Read))
+          {
+            Console += "Found " + archive.Entries.Count + " files" + Environment.NewLine;
+          }
+
       }
 
     }
