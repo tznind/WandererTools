@@ -5,6 +5,7 @@
 @using Wanderer.Systems.Validation
 @using System.IO.Compression
 @using Wanderer.Editor
+@using Wanderer.Actions
 
 <h1>Dialogue Builder</h1>
 
@@ -62,6 +63,9 @@ Morning player, how are you this fine morning?
     private string ConsoleInput {get;set;}
 
     private byte[] zip;
+
+    private Wanderer.IWorld world;
+
     protected override async Task OnInitializedAsync()
     {
         zip = await Http.GetByteArrayAsync("Resources.zip");
@@ -71,6 +75,15 @@ Morning player, how are you this fine morning?
 
       try
       {
+
+        if(int.TryParse(ConsoleInput, out int choice))
+        {
+           if(actions.ContainsKey(choice))
+              RunAction(actions[choice]);
+           else
+             Console += "Invalid choice" + Environment.NewLine;
+        }
+
         if(string.Equals(ConsoleInput,"start",StringComparison.CurrentCultureIgnoreCase))
         {
             Console += "Loading " + zip.Length + " bytes" + Environment.NewLine;
@@ -93,12 +106,47 @@ Morning player, how are you this fine morning?
 
               Console += validator.WarningCount + " Warnings" + Environment.NewLine;           
               Console += validator.ErrorCount + " Errors" + Environment.NewLine;
+
+              world = factory.Create();
+
+              PromptCommands();
             }
         }
       }
       catch(Exception ex)
       {
         Console += ex + Environment.NewLine;
+      }
+
+      ConsoleInput = "";
+    }
+
+    Dictionary<int,IAction> actions = new Dictionary<int, IAction>();
+
+    public void PromptCommands()
+    {
+      if(world == null)
+        return;
+
+      
+      actions.Clear();
+
+      int i=0;
+      foreach(IAction a in world.Player.GetFinalActions())
+      {
+          i++;
+          Console += i + ":" + a + Environment.NewLine;
+          actions.Add(i,a);
+      }
+    }
+    public void RunAction(IAction a)
+    {
+      Console = "";
+      
+      if(world != null)
+      {
+        Console += "TODO: Run action " + a;
+        PromptCommands();
       }
     }
 }
