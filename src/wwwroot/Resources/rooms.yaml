@@ -1,0 +1,16 @@
+- Name: Decrepit Shop
+  OptionalItems:
+    - Name: Shiny Pebble
+    - Name: Mound of dust
+    - Name: Broken Mop
+      Stats:
+         Fight: 5
+      Slot:
+         Name: Hand
+         NumberRequired: 2
+  MandatoryActors:
+    - Name: Enthusiastic Goblin
+      Dialogue:
+        Verb: approach
+        Next: ba7b8ccb-daa7-4ac6-82ba-9bdc0333ee3a
+

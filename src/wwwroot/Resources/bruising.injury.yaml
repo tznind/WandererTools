@@ -1,0 +1,14 @@
+Name: Hitting
+IsDefault: true
+FatalVerb: injuries
+MergeInstances: true
+FatalThreshold: 100
+Injuries:
+  - Name: Grazed
+    Severity: 10
+  - Name: Bruised
+    Severity: 30
+  - Name: Beaten
+    Severity: 60
+  - Name: Mangled
+    Severity: 90

@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+
+			
+		"yaml.schemas": {
+			"./wwwroot/Resources/Schemas/injury.schema.json": [ "/**/*injury.yaml" ],
+			"./wwwroot/Resources/Schemas/dialogue.schema.json": [ "/**/*dialogue.yaml" ],
+			"./wwwroot/Resources/Schemas/adjectives.schema.json": [ "/**/*adjectives.yaml" ],
+			"./wwwroot/Resources/Schemas/actions.schema.json": [ "/**/*actions.yaml" ],
+			"./wwwroot/Resources/Schemas/items.schema.json": [ "/**/*items.yaml" ],
+			"./wwwroot/Resources/Schemas/rooms.schema.json": [ "/**/*rooms.yaml" ],
+			"./wwwroot/Resources/Schemas/actors.schema.json": [ "/**/*actors.yaml" ],
+			"./wwwroot/Resources/Schemas/faction.schema.json": [ "/**/*faction.yaml" ],
+			"./wwwroot/Resources/Schemas/plans.schema.json": [ "/**/*plans.yaml" ],
+			"./wwwroot/Resources/Schemas/lots.schema.json": [ "/**/*slots.yaml" ],
+		}
+    } 
+}

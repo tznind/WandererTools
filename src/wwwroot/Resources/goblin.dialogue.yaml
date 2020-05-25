@@ -1,0 +1,16 @@
+- Identifier: ba7b8ccb-daa7-4ac6-82ba-9bdc0333ee3a
+  Body:
+    - Text: This revolting goblin hops eagerly from foot to foot clearly desperate to tell you something
+  Options:
+    - Text: Attack
+      Attitude: -500
+      Effect:
+        - Spawn: Goblin Guard
+        - Spawn: Goblin Guard
+    - Text: Go on then, what is it you want to tell me about?
+      Destination: b8db2789-8785-410c-a904-1514dd67da41
+    - Text: Leave
+      
+- Identifier: b8db2789-8785-410c-a904-1514dd67da41
+  Body:
+    - Text: Theres this great new engine...

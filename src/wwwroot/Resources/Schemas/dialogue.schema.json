@@ -1,0 +1,266 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "ListOfDialogueNodeBlueprint",
+  "type": "array",
+  "items": {
+    "$ref": "#/definitions/DialogueNodeBlueprint"
+  },
+  "definitions": {
+    "DialogueNodeBlueprint": {
+      "type": "object",
+      "description": "Blueprint for creating a DialogueNode",
+      "additionalProperties": false,
+      "properties": {
+        "Options": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "description": "Responses that can be picked, can include conditional options (e.g. only available if a stat is above a threshold)",
+          "items": {
+            "$ref": "#/definitions/DialogueOptionBlueprint"
+          }
+        },
+        "Identifier": {
+          "type": "string",
+          "description": "Unique identifier for this branch/leaf of the dialogue tree",
+          "format": "guid"
+        },
+        "Body": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "description": "Collection of  which will be concatenated to create a single piece of text  that gets displayed for this node (includes support for conditional bits of text).",
+          "items": {
+            "$ref": "#/definitions/TextBlockBlueprint"
+          }
+        },
+        "Condition": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "description": "Conditions which should be true before this tree will be run.  Only applies to the Root  of a dialogue tree (i.e. initiating Dialogue).  To control conditional navigation set conditions on the Options instead",
+          "items": {
+            "$ref": "#/definitions/ConditionBlueprint"
+          }
+        }
+      }
+    },
+    "DialogueOptionBlueprint": {
+      "type": "object",
+      "description": "Blueprint for creating a DialogueOption",
+      "additionalProperties": false,
+      "properties": {
+        "Effect": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "description": "Effects which happen if this dialogue option is picked (spawn items etc)",
+          "items": {
+            "$ref": "#/definitions/EffectBlueprint"
+          }
+        },
+        "Destination": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Determines which DialogueNode should follow from this option if it is picked. Leave null to terminate dialogue",
+          "format": "guid"
+        },
+        "Attitude": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "How angry / happy this dialogue option makes the person you are talk to (as the perceive you). Positive for happy negative for angry.",
+          "format": "int32"
+        },
+        "Text": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "The human readable text for the option"
+        },
+        "Condition": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "description": "Conditions which must all be true before the Effect are fired.  If multiple then they are combined with AND.  If none then option will always be presented",
+          "items": {
+            "$ref": "#/definitions/ConditionBlueprint"
+          }
+        },
+        "SingleUse": {
+          "type": "boolean",
+          "description": "Set to true to allow user to select this option only once"
+        },
+        "Transition": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Makes dialogue option transition from talking to one room / actor to \nanother (who must be present).  This combines a condition of the guid being\npresent and the state update if the option is picked.\n            \nSetting a  overrides  as\nthe option (if picked) will instead go to the  of\nthe referenced object",
+          "format": "guid"
+        }
+      }
+    },
+    "EffectBlueprint": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Lua": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "Kill": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Kill the primary actor triggering the effect (text indicates cause of death e.g. \"poison\").  In dialogue it is the speaker (e.g. player), for action it is the action performer"
+        },
+        "Target": {
+          "description": "Apply the effect (Kill, Set etc) to the given object (default is Aggressor - the acting thing).  Options include Room (where room the event is taking place), Recipient (who you are talking to) etc",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/SystemArgsTarget"
+            }
+          ]
+        },
+        "Set": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Sets a stat or variable to a given value e.g. \"MyCounter += 5\".  If a Stat exists in AllStats then Set will apply to that stat otherwise a variable will be assigned"
+        },
+        "Reveal": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Marks the given point on the map as visible.  Combine with Room FixedLocation to help the player find interesting rooms"
+        },
+        "Spawn": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Spawns the referenced object (Item, Actor, Adjective etc).  Target property dictates what to spawn the object into/onto. Must uniquely identify a single object blueprint"
+        }
+      }
+    },
+    "SystemArgsTarget": {
+      "type": "integer",
+      "description": "0 = Aggressor\n1 = Recipient\n2 = Room\n3 = Owner",
+      "x-enumNames": [
+        "Aggressor",
+        "Recipient",
+        "Room",
+        "Owner"
+      ],
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    "ConditionBlueprint": {
+      "type": "object",
+      "description": "Blueprint that describes how to build one or more ICondition",
+      "additionalProperties": false,
+      "properties": {
+        "Lua": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Lua code that returns true or false"
+        },
+        "Has": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Pass a Guid or Name of something they might have, if they have it then the condition is met"
+        },
+        "Is": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Pass a Guid or Name, condition is true if the object is it.  This does not include things they have e.g. items, adjectives etc (see Has for that)"
+        },
+        "HasNot": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Pass a Guid or Name of something.  As long as they don't have it this condition is true"
+        },
+        "IsNot": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Pass a Guid or Name, condition is true as long as the object is NOT it.  This does not include things they have e.g. items, adjectives etc  (see Has for that)"
+        },
+        "Stat": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Arithmetic expression for a required stat they must have e.g. \"Fight &gt; 50\""
+        },
+        "Variable": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Arithmetic expression for a required custom variable e.g. \"MyCounter &gt; 50\" (See V)"
+        },
+        "Check": {
+          "description": "Apply the check (Has, Is, Stat etc) to the given object (default is Aggressor - the acting thing).  Options include Room (where room the event is taking place), Recipient (who you are talking to) etc",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/SystemArgsTarget"
+            }
+          ]
+        }
+      }
+    },
+    "TextBlockBlueprint": {
+      "type": "object",
+      "description": "Describes how to create instances of TextBlock",
+      "additionalProperties": false,
+      "properties": {
+        "Condition": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "description": "List of conditions that must be true before this sentence or paragraph should be included in the displayed text of a DialogueNode.  If no conditions then it is automatically included",
+          "items": {
+            "$ref": "#/definitions/ConditionBlueprint"
+          }
+        },
+        "Text": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "The dialogue text to display to the user"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+- Name: Goblin Guard
+  Stats:
+    Fight: 5
+  MandatoryItems:
+    - Name: Sword
+      Slot:
+        Name: Hand
+        NumberRequired: 1
+      Stats: 
+        Fight: 10
